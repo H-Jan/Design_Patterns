@@ -34,7 +34,7 @@ Based on our first implementation `weather_data1.py`, which of the following app
 
 [ ] A. We are coding to concrete implementations, not interfaces.  
 [ ] B. For every new display we’ll need to alter this code.  
-[ ] C. We have no way to add (or remove) display elements at runtime.  
+[X] C. We have no way to add (or remove) display elements at runtime.  
 [ ] D. The display elements don’t implement a common interface.  
 [ ] E. We haven’t encapsulated the part that changes.  
 [ ] F. We are violating encapsulation of the WeatherData class.  

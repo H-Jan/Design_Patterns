@@ -79,7 +79,61 @@ class CurrentConditionsDisplay(Observer):
               "F degrees and", self.humidity,"[%] humidity",
               "and pressure", self.pressure)
 
-# TODO: implement StatisticsDisplay class and ForecastDisplay class.
+# TODO (DONE): implement StatisticsDisplay class and ForecastDisplay class.
+
+class StatisticsDisplay(Observer):
+
+    def __init__(self, weatherData):
+        # lists of previous values
+        self.temperatures = []
+        self.humidities = []
+        self.pressures = []
+
+        self.weatherData = weatherData  
+        weatherData.registerObserver(self)  
+
+    def update(self, temperature, humidity, pressure):
+        self.temperatures.append(temperature)
+        self.humidities.append(humidity)
+        self.pressures.append(pressure)
+
+        self.display()
+
+    def averages(self):
+        return [self.calc_average(self.temperatures), self.calc_average(self.humidities), self.calc_average(self.pressures)]
+
+    def calc_average(self, lists):
+        return sum(lists) / len(lists)
+
+    def display(self):
+        averages = self.averages()
+        print("Average conditions:", averages[0],
+              "F degrees and", averages[1], "[%] humidity",
+              "and pressure", averages[2])
+
+
+class ForcastDisplay(Observer):
+
+    def __init__(self, weatherData):
+        self.forcast_temperature = 0
+        self.forcast_humidity = 0
+        self.forcast_pressure = 0
+
+        self.weatherData = weatherData  
+        weatherData.registerObserver(self) 
+
+    def predict_forcast(self, temperature, humidity, pressure):
+        self.forcast_temperature = temperature + 0.11 * humidity + 0.2 * pressure
+        self.forcast_humidity = humidity - 0.9 * humidity
+        self.forcast_pressure = pressure + 0.1 * temperature - 0.21 * pressure
+
+        self.display()
+
+    def display(self):
+        print("Forcasted conditions:", self.forcast_temperature,
+              "F degrees and", self.forcast_humidity, "[%] humidity",
+              "and pressure", self.forcast_pressure)
+
 
 
 class WeatherStation:
@@ -87,9 +141,11 @@ class WeatherStation:
         weather_data = WeatherData()
         current_display = CurrentConditionsDisplay(weather_data)
 
-        # TODO: Create two objects from StatisticsDisplay class and
+        # TODO(DONE): Create two objects from StatisticsDisplay class and
         # ForecastDisplay class. Also register them to the concerete instance
         # of the Subject class so the they get the measurements' updates.
+        statistics = StatisticsDisplay(weather_data)
+        forcast_predict = ForcastDisplay(weather_data)
 
         # The StatisticsDisplay class should keep track of the min/average/max
         # measurements and display them.
